@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYS.SNAKE // AUDIO.EXEC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        glitch: {
+                            cyan: '#00ffff',
+                            magenta: '#ff00ff',
+                            yellow: '#ffff00',
+                            black: '#050505',
+                            gray: '#1a1a1a',
+                            dark: '#0a0a0a'
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['"VT323"', 'monospace'],
+                        sans: ['"VT323"', 'monospace']
+                    },
+                    boxShadow: {
+                        'glitch-cyan': '4px 4px 0px theme("colors.glitch.cyan")',
+                        'glitch-magenta': '-4px -4px 0px theme("colors.glitch.magenta")',
+                        'glitch-yellow': '4px -4px 0px theme("colors.glitch.yellow")',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #fff;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'VT323', monospace;
+            text-transform: uppercase;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+            border-left: 2px solid #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ff00ff;
+            border: 2px solid #050505;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ffff;
+        }
+
+        /* Glitch Art CSS */
+        .bg-noise {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.15"/%3E%3C/svg%3E');
+            animation: noise 0.2s infinite;
+            pointer-events: none;
+            z-index: 50;
+            mix-blend-mode: overlay;
+        }
+
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.4));
+            background-size: 100% 6px;
+            pointer-events: none;
+            z-index: 49;
+        }
+
+        @keyframes noise {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-5%, -10%); }
+            20% { transform: translate(-15%, 5%); }
+            30% { transform: translate(7%, -25%); }
+            40% { transform: translate(20%, 25%); }
+            50% { transform: translate(-25%, 10%); }
+            60% { transform: translate(15%, 5%); }
+            70% { transform: translate(0%, 15%); }
+            80% { transform: translate(25%, 35%); }
+            90% { transform: translate(-10%, 10%); }
+        }
+
+        .glitch-text {
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #050505;
+        }
+
+        .glitch-text::before {
+            left: 3px;
+            text-shadow: -2px 0 #ff00ff;
+            clip-path: inset(20% 0 80% 0);
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+        }
+
+        .glitch-text::after {
+            left: -3px;
+            text-shadow: -2px 0 #00ffff;
+            clip-path: inset(80% 0 20% 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim-1 {
+            0% { clip-path: inset(20% 0 80% 0); transform: translate(0); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(-2px, 1px); }
+            40% { clip-path: inset(40% 0 50% 0); transform: translate(2px, -1px); }
+            60% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 2px); }
+            80% { clip-path: inset(10% 0 70% 0); transform: translate(2px, -2px); }
+            100% { clip-path: inset(30% 0 50% 0); transform: translate(0); }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% { clip-path: inset(10% 0 60% 0); transform: translate(0); }
+            20% { clip-path: inset(30% 0 20% 0); transform: translate(2px, -1px); }
+            40% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 1px); }
+            60% { clip-path: inset(20% 0 50% 0); transform: translate(2px, 2px); }
+            80% { clip-path: inset(90% 0 5% 0); transform: translate(-2px, -2px); }
+            100% { clip-path: inset(50% 0 30% 0); transform: translate(0); }
+        }
+
+        .screen-tear {
+            animation: tear 4s infinite;
+        }
+
+        @keyframes tear {
+            0%, 95%, 100% { transform: translateX(0); }
+            96% { transform: translateX(10px) skewX(10deg); }
+            97% { transform: translateX(-10px) skewX(-10deg); }
+            98% { transform: translateX(5px) skewX(5deg); }
+        }
+
+        .crt-flicker {
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.95; }
+            50% { opacity: 1; }
+            100% { opacity: 0.9; }
+        }
+    </style>
+    </head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
+<script type="module" src="/index.js"></script></body>
+</html>
